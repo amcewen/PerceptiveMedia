@@ -1,0 +1,29 @@
+# Instructions run to set up the Beaglebone to run PerceptiveMedia
+
+$ cd /var/lib/cloud9
+$ git clone <github url>
+
+# Copy the modified bonescript/index.js into the right place
+# (Gives us the RSS proxies and smoothedRead function)
+$ cp bonescript_index.js /var/lib/cloud9/bonescript/
+
+# Set up the service to run at boot time, rather than the default bone101 presentation
+$ systemctl disable bone101.service
+$ cp PerceptiveMedia/perceptivemedia.service /lib/systemd/system/perceptivemedia.service
+$ systemctl enable perceptivemedia.service
+# Check it's now enabled
+$ systemctl list-unit-files
+# It should be listed as enabled
+$ reboot
+# To check it comes up okay on startup
+
+# Set static IP address (as the BeagleBone will boot quicker than the
+# PC and so timeout on its DHCP request before the DHCP server comes up
+$ cd /usr/lib/conman/test
+$ ./get-services
+# That will list the available services, use the ethernet_xxx_cable string
+# in the following calls to define the right interface to amend
+$ ./set-ipv4-method ethernet_001831e18b50_cable manual 10.42.0.5 255.255.255.0 10.42.0.1
+$ ./set-nameservers ethernet_001831e18b50_cable 10.42.0.1
+
+

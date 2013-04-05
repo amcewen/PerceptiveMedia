@@ -156,13 +156,21 @@
 				</div>
 			</div>
 		</div>
-		<div class="easter-egg easter-egg-hidden">
+		<div class="easter-egg">
 			<span id="js-easter-egg-msg">You've found the hidden Easter Egg &rarr;</span>
 			<a id="js-easter-egg" title="easter egg">&bull;</a>
 		</div>
 	</div>
 	<div id="jplayerIntro"></div>
 </body>
+<script type="text/javascript">
+	// Global variables for BeagleBone integration
+var bbLightSmoothed = 0;
+var bbUltrasonicSmoothed = 0;
+var bbAmbientNoiseSmoothed = 0;
+</script>
+
+<script src="client.js"></script>
 <script src="assets/js/jquery/jquery-1.7.2.min.js"></script>
 <script src="assets/js/jplayer/jquery.jplayer.js"></script>
 <script src="assets/js/transform2d/jquery.transform2d.js"></script>
@@ -199,6 +207,12 @@ window.___gcfg = {lang: 'en-GB'};
 	po.src = 'https://apis.google.com/js/plusone.js';
 	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 })();
+</script>
+<script type="text/javascript">
+	// Autostart after a few seconds (to give the doc.ready.js stuff time to run)
+	$(document).ready(function() {
+		window.setTimeout(function() { $('#startBanner').click(); }, 3000);
+	});
 </script>
 <script type="text/javascript">
 	var _gaq = _gaq || [];

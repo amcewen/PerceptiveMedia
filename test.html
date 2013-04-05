@@ -1,0 +1,105 @@
+<html>
+<head><title>Testing analogRead</title>
+	<script src="client.js" charset="utf-8" type="text/javascript"></script>
+	<script type="text/javascript">
+		var ultrasonic = 0;
+		var light = 0;
+		var mic = 0;
+		var micSize = 20;
+		var micVals = [0,0,0,0,0,0,0,0,0,0];
+		var micIdx = 0;
+		var line = 0;
+		var smoothIdx = function(val)
+		{
+			var ret = 0;
+			micSize = $('#micSize')[0].value;
+			micIdx++;
+			if (micIdx == micSize) micIdx = 0;
+			micVals[micIdx] = val;
+			//console.log("Smoothing...");
+			for (i =0; i < micSize; i++)
+			{
+				ret = ret + micVals[i];
+				//console.log(ret);
+			}
+			$('#ret').text(ret);
+			return ret/micSize;
+		}
+		var smooth = function(smoothedVal, val)
+		{
+			var smoothingFactor = $('#factor')[0].value;
+			return (smoothedVal*smoothingFactor)+(val*(1-smoothingFactor));
+		}
+		arUpdateSlider_36 = function(x) {
+			if (x.value) {
+				$("#P9_36").text(x.value);
+				ultrasonic = smooth(ultrasonic, x.value);
+				$("#ultrasonic").text(ultrasonic);
+			}
+		};
+		arUpdateSlider_37 = function(x) {
+			if (x.value) {
+				$("#P9_37").text(x.value);
+				//mic = smooth(mic, x.value);
+				mic = smoothIdx(x.value);
+				$("#mic").text(mic);
+			}
+		};
+		arUpdateSlider_38 = function(x) {
+			if (x.value) {
+				$("#P9_38").text(x.value);
+				light = smooth(light, x.value);
+				$("#light").text(light);
+			}
+		};
+		arUpdateSlider_39 = function(x) {
+			if (x.value) {
+				$("#P9_39").text(x.value);
+				line = smooth(line, x.value);
+				$("#line").text(line);
+			}
+		};
+
+		var interval36 = setInterval(function() {
+				analogRead(bone.P9_36, arUpdateSlider_36);
+				}, 100);
+		var interval37 = setInterval(function() {
+				smoothedRead(bone.P9_37, arUpdateSlider_37);
+				}, 100);
+		var interval38 = setInterval(function() {
+				analogRead(bone.P9_38, arUpdateSlider_38);
+				}, 100);
+		var interval39 = setInterval(function() {
+				analogRead(bone.P9_39, arUpdateSlider_39);
+				}, 100);
+	</script>
+</head>
+<body>
+	<h1>Testing analogRead</h1>
+	<p>Smoothing factor: <input type="text" name="factor" id="factor" value="0.5"></p>
+	<p>Mic sample count: <input type="text" name="micSize" id="micSize" value="15"></p>
+	<p>Ret: <span id="ret">0</span></p>
+	<table>
+		<tr>
+			<td>P9_36, ultrasonic:</td>
+			<td width="200px"><span id="ultrasonic">0</span></td>
+			<td><span id="P9_36">here</span></td>
+		</tr>
+		<tr>
+			<td>P9_37, mic</td>
+			<td><span id="mic">0</span></td>
+			<td><span id="P9_37">here</span></td>
+		</tr>
+		<tr>
+			<td>P9_38, light</td>
+			<td><span id="light">0</span></td>
+			<td><span id="P9_38">here</span></td>
+		</tr>
+		<tr>
+			<td>P9_39, line-out</td>
+		        <td><span id="line">0</span></td>
+			<td><span id="P9_39">here</span></td>
+		</tr>
+	</table>
+</body>
+</html>

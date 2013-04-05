@@ -501,6 +501,76 @@ jQuery(document).ready(function ($) {
 										$(this).parent().removeClass('easter-egg-hidden');
 										$('#js-easter-bunny').toggle();
 									}).show();
+									var bbMapValue = function(value, fromLow, fromHigh, toLow, toHigh) {
+										if (toLow < toHigh) {
+											return ((value-fromLow)/(fromHigh-fromLow))*(toHigh-toLow);
+										} else {
+											return toLow-(((value-fromLow)/(fromHigh-fromLow))*(toLow-toHigh));
+										}
+									}
+
+									var bbUpdateAmbientNoise = function(x) {
+										//$("#js-easter-egg-msg").text(x.value);
+										$("#js-easter-egg-msg").text("AmbientNoise: "+bbAmbientNoiseSmoothed+", Light: "+bbLightSmoothed+", Ultrasonic: "+bbUltrasonicSmoothed+", depth: "+myPM.depthControl+", harriet vol: "+myPM.trackEnv.harriet.lift.bufferGain);
+										// This interval is monitoring the line-level from the PC.
+										// Only update the ambient noise level when there's no
+										// output on the line-level (so we don't hit a feedback loop)
+										// [there's a slight race condition here if the line-level goes
+										// back up before we have chance to call smoothedRead. If that
+										// proves to be a problem then we can move this check to the
+										// BeagleBone side]
+										// We get line-level values below 0.01 if there's no output
+										if (x.value < 0.01) {
+											// Because the sensor data is a bit spikey, we'll use a weighted average
+											// for the actual value to affect things
+											var ambientNoise = smoothedRead(bone.P9_37);
+											bbAmbientNoiseSmoothed = (bbAmbientNoiseSmoothed*0.3)+(x.value*0.7);
+											// Light reading tends to be between 0 and 1, so map accordingly
+											myPM.depthControl = bbMapValue(bbAmbientNoiseSmoothed, 0.001, 0.01, 0.9, 0.0); 
+											updateDepthControl(myPM.depthControl);
+										}
+									}
+									// Start monitoring it
+									var bbAmbientNoiseInterval = setInterval(function() { analogRead(bone.P9_39, bbUpdateAmbientNoise); }, 100);
+
+									var bbUpdateLight = function(x) {
+										//$("#js-easter-egg-msg").text(x.value);
+										$("#js-easter-egg-msg").text("AmbientNoise: "+bbAmbientNoiseSmoothed+", Light: "+bbLightSmoothed+", Ultrasonic: "+bbUltrasonicSmoothed+", depth: "+myPM.depthControl+", harriet vol: "+myPM.trackEnv.harriet.lift.bufferGain);
+										if (x.value) {
+											// Because the sensor data is a bit spikey, we'll use a weighted average
+											// for the actual value to affect things
+											bbLightSmoothed = (bbLightSmoothed*0.3)+(x.value*0.7);
+											// Light reading tends to be between 0 and 1, so map accordingly
+											//myPM.depthControl = bbMapValue(bbLightSmoothed, 0, 1.0, 0, 1.0); 
+											//updateDepthControl(myPM.depthControl);
+											myPM.trackEnv.harriet.lift.bufferGain = bbMapValue(bbLightSmoothed, 0, 1.0, 1, 8); 
+											updateAssets();
+										}
+									}
+									// Start monitoring it
+									var bbLightInterval = setInterval(function() { analogRead(bone.P9_38, bbUpdateLight); }, 100);
+
+									var bbUpdateUltrasonic = function(x) {
+										$("#js-easter-egg-msg").text("AmbientNoise: "+bbAmbientNoiseSmoothed+", Light: "+bbLightSmoothed+", Ultrasonic: "+bbUltrasonicSmoothed+", depth: "+myPM.depthControl+", harriet vol: "+myPM.trackEnv.harriet.lift.bufferGain);
+										//$("#js-easter-egg-msg").text(x.value);
+										if (x.value) {
+											// Because the sensor data is a bit spikey, we'll use a weighted average
+											// for the actual value to affect things
+											bbUltrasonicSmoothed = (bbUltrasonicSmoothed*0.3)+(x.value*0.7);
+											//myPM.depthControl = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 0, 1.0);
+											//updateDepthControl(myPM.depthControl);
+											//myPM.trackEnv.harriet.lift.bufferGain = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 0, 8);
+											//updateAssets();
+											myPM.tGap = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 2, -1.0);
+											//updateTimings();
+										}
+									}
+									var bbUltrasonicInterval = setInterval(function() { analogRead(bone.P9_36, bbUpdateUltrasonic); }, 2100);
+
+									var bbRestartButton = function(x) { bbTest = x; if (x.value == 1) { myPM.play(0); } }
+									// Ideally we'd do this by attaching an interrupt to pin P8_5,
+									// but I've given up trying to get that to work reliably :-(
+									var bbRestartInterval = setInterval(function() { digitalRead(bone.P8_5, bbRestartButton); }, 300);
 
 									// Get the loader's loop offset and then play the story from it... So they are in synch.
 									var startOffset = -myLoader.assets.loader[0].getGrainRemaining(); // Shedules a noteOff on loader for when story starts.

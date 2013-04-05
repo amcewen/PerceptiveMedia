@@ -1,0 +1,11 @@
+[Unit]
+Description=BBC R&D Perceptive Media
+ConditionPathExists=|/var/lib/cloud9
+
+[Service]
+WorkingDirectory=/var/lib/cloud9
+ExecStart=/usr/bin/node PerceptiveMedia/PerceptiveMedia.js
+
+[Install]
+WantedBy=multi-user.target
+
