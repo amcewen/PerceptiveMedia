@@ -523,7 +523,7 @@ jQuery(document).ready(function ($) {
 										if (x.value < 0.01) {
 											// Because the sensor data is a bit spikey, we'll use a weighted average
 											// for the actual value to affect things
-											var ambientNoise = smoothedRead(bone.P9_37);
+											var ambientNoise = smoothedRead(bone.P9_33);
 											bbAmbientNoiseSmoothed = (bbAmbientNoiseSmoothed*0.3)+(x.value*0.7);
 											// Light reading tends to be between 0 and 1, so map accordingly
 											myPM.depthControl = bbMapValue(bbAmbientNoiseSmoothed, 0.001, 0.01, 0.9, 0.0); 
@@ -531,7 +531,7 @@ jQuery(document).ready(function ($) {
 										}
 									}
 									// Start monitoring it
-									var bbAmbientNoiseInterval = setInterval(function() { analogRead(bone.P9_39, bbUpdateAmbientNoise); }, 100);
+									var bbAmbientNoiseInterval = setInterval(function() { analogRead(bone.P9_37, bbUpdateAmbientNoise); }, 100);
 
 									var bbUpdateLight = function(x) {
 										//$("#js-easter-egg-msg").text(x.value);
@@ -548,7 +548,7 @@ jQuery(document).ready(function ($) {
 										}
 									}
 									// Start monitoring it
-									var bbLightInterval = setInterval(function() { analogRead(bone.P9_38, bbUpdateLight); }, 100);
+									var bbLightInterval = setInterval(function() { analogRead(bone.P9_35, bbUpdateLight); }, 100);
 
 									var bbUpdateUltrasonic = function(x) {
 										$("#js-easter-egg-msg").text("AmbientNoise: "+bbAmbientNoiseSmoothed+", Light: "+bbLightSmoothed+", Ultrasonic: "+bbUltrasonicSmoothed+", depth: "+myPM.depthControl+", harriet vol: "+myPM.trackEnv.harriet.lift.bufferGain);
@@ -565,7 +565,7 @@ jQuery(document).ready(function ($) {
 											//updateTimings();
 										}
 									}
-									var bbUltrasonicInterval = setInterval(function() { analogRead(bone.P9_36, bbUpdateUltrasonic); }, 2100);
+									var bbUltrasonicInterval = setInterval(function() { analogRead(bone.P9_39, bbUpdateUltrasonic); }, 2100);
 
 									var bbRestartButton = function(x) { bbTest = x; if (x.value == 1) { myPM.play(0); } }
 									// Ideally we'd do this by attaching an interrupt to pin P8_5,
