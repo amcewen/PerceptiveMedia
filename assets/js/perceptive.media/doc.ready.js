@@ -525,9 +525,10 @@ jQuery(document).ready(function ($) {
 											// for the actual value to affect things
 											var ambientNoise = smoothedRead(bone.P9_33);
 											bbAmbientNoiseSmoothed = (bbAmbientNoiseSmoothed*0.3)+(x.value*0.7);
-											// Light reading tends to be between 0 and 1, so map accordingly
-											myPM.depthControl = bbMapValue(bbAmbientNoiseSmoothed, 0.001, 0.01, 0.9, 0.0); 
-											updateDepthControl(myPM.depthControl);
+											//myPM.depthControl = bbMapValue(bbAmbientNoiseSmoothed, 0.001, 0.01, 0.9, 0.0); 
+											//updateDepthControl(myPM.depthControl);
+											myPM.trackEnv.ambient.lift.bufferGain = bbMapValue(bbAmbientNoiseSmoothed, 0.001, 0.01, 1, 8); 
+											updateAssets();
 										}
 									}
 									// Start monitoring it
@@ -557,11 +558,11 @@ jQuery(document).ready(function ($) {
 											// Because the sensor data is a bit spikey, we'll use a weighted average
 											// for the actual value to affect things
 											bbUltrasonicSmoothed = (bbUltrasonicSmoothed*0.3)+(x.value*0.7);
-											//myPM.depthControl = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 0, 1.0);
-											//updateDepthControl(myPM.depthControl);
+											myPM.depthControl = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 0, 1.0);
+											updateDepthControl(myPM.depthControl);
 											//myPM.trackEnv.harriet.lift.bufferGain = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 0, 8);
 											//updateAssets();
-											myPM.tGap = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 2, -1.0);
+											//myPM.tGap = bbMapValue(bbUltrasonicSmoothed, 0, 0.4, 2, -1.0);
 											//updateTimings();
 										}
 									}
