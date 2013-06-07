@@ -1,0 +1,37 @@
+Perceptive Radio,,
+Version,V1.0,
+,,
+BeagleBone,,
+Quantity,Part,
+1,BeagleBone,
+1,100nF ceramic capacitor,
+2,1N4001 diode,
+1,Sparkfun Breakout Board for Electret Microphone,
+1,Stereo Audio Jack,
+2,10k Ω Trimpot,
+3,10k Ω Resistor,
+1,10k Ω Photocell (LDR),
+1,1.6k Ω Resistor,
+1,1k Ω Resistor,
+1,560 Ω Resistor,
+1,Pushbutton,
+1,Ultrasonic Range Finder (Maxbotix LV-EZ2),
+,,
+PC,,
+Quantity,Part,Notes
+1,8GB USB flash drive,
+1,picoPSU-150-XT 12V Plug-in DC-DC ATX PSU,
+1,192W AC Universal Adapter 12V 16A,
+1,Intel DH61DL mini-ITX motherboard,
+1,Intel Core i3-3220 LGA1155 processor,
+1,2GB DDR3 1333 RAM,
+1,USB WiFi dongle,
+1,Hard-drive power connector (Molex),Used to tap 5V power from a hard-drive connector for the BeagleBone
+1,"5.5mm OD, 2.1mm pin, barrel jack power connector",Used to tap 5V power from a hard-drive connector for the BeagleBone
+2,Speakers,
+1,Volume knob,
+1,20k Ω potentiometer,Wired into the connections for the volume potentiometers on both speakers
+1,Pushbutton,Power button for motherboard
+1,3mm LED,Power LED for motherboard
+1,"3.5mm stereo jack, panel mount (make-to-break)","Wired to line-out on PC, after the tap into the Beaglebone but before the speakers connection, so plugging in a cable will cut output to the speakers"
+1,Ethernet patch cable,To connect the PC to the Beaglebone

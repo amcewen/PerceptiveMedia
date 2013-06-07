@@ -27,3 +27,33 @@ $ ./set-ipv4-method ethernet_001831e18b50_cable manual 10.42.0.5 255.255.255.0 1
 $ ./set-nameservers ethernet_001831e18b50_cable 10.42.0.1
 
 
+####
+#
+# Setting up the mini-ITX server
+#
+####
+
+# Install Linux Mint
+# Configure Chrome to automatically run at boot
+# Set home page for Chrome to point to Beaglebone Perceptive Media
+# Set networking to share connection through eth0 for the Beaglebone
+# Change power settings so that power button automatically shuts down
+# Configure video to start up without a monitor attached.
+$ sudo Xorg -configure
+$ sudo cp xorg.conf.new /etc/X11/xorg.conf
+# Edit generated xorg.conf file to disable spurious additional screens (only
+# need Screen 0) and add the following to the Monitor0 section
+#	Option	"enable" "true"
+# so it's chosen regardless of whether or not it's connected
+$ sudo vi /etc/X11/xorg.conf
+# Edit boot parameters to also help it boot headless (not completely sure this
+# is necessary, but was one of changes which made difference)
+$ sudo vi /etc/default/grub
+# Add i915.modeset=1 after the quiet splash keywords on the 
+# GRUB_CMDLINE_LINUX_DEFAULT line
+# Edit the timeout parameters to stop it bringing up the Grub menu if the
+# last boot failed - see https://help.ubuntu.com/community/Grub2 for details
+# basically "set timeout=0" and "set linux_gfx_mode=keep"
+$ sudo update-grub
+
+
