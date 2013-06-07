@@ -544,8 +544,24 @@ jQuery(document).ready(function ($) {
 											// Light reading tends to be between 0 and 1, so map accordingly
 											//myPM.depthControl = bbMapValue(bbLightSmoothed, 0, 1.0, 0, 1.0); 
 											//updateDepthControl(myPM.depthControl);
-											myPM.trackEnv.harriet.lift.bufferGain = bbMapValue(bbLightSmoothed, 0, 1.0, 1, 8); 
+											myPM.trackEnv.lift.lift.bufferGain = bbMapValue(bbLightSmoothed, 0, 0.35, 1.2, 0.0); 
 											updateAssets();
+											//var old_tGap = myPM.tGap;
+											//if (bbLightSmoothed > 0.3) {
+												//// It's dark
+												//myPM.tGap = 2;
+											//} else if (bbLightSmoothed > 0.2) {
+												//// It's average room light levels
+												//myPM.tGap = 1;
+											//} else {
+												//// It's really bright
+												//myPM.tGap = 0;
+											//}
+											//if (myPM.tGap != old_tGap) {
+												//// It's changed
+												//updateTimings();
+											//}
+
 										}
 									}
 									// Start monitoring it
