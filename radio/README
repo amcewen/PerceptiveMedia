@@ -1,0 +1,10 @@
+Files for the physical radio prototype.
+
+See http://wearemudlark.com/blog/the-perceptive-radio-a-project-for-bbc-rd/ for more background on it.
+
+Files list:
+INSTALL - steps required to get the software installed correctly on the Beaglebone and mini-ITX PC
+BillOfMaterials.csv - electronics and computer parts required to build the radio
+BeagleBone_connections.fzz - Fritzing diagram showing the schematics for the assorted sensors connected to the Beaglebone
+Case.svg - laser-cutter design files for the case
+
