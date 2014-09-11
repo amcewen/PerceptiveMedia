@@ -21,12 +21,21 @@
 	/*
 	 * Set the URL of the page or file to download.
 	 */
-	curl_setopt($ch, CURLOPT_URL, 'http://www.filmdates.co.uk/rss/out_this_week.php');
+	curl_setopt($ch, CURLOPT_URL, 'http://www.filmdates.co.uk/rss/out-this-week/');
 
 	/*
 	 * Ask cURL to return the contents in a variable instead of simply echoing them to  the browser.
 	 */
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+	/*
+	 * Make the request look like an RSS reader
+	 */
+	$request_header = array(
+		'User-Agent: Mozilla',
+		'Accept: text/html,application/xml'
+	);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $request_header);
 
 	/*
 	 * Execute the cURL session
