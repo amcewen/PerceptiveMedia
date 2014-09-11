@@ -832,7 +832,7 @@ exports.Server = function(port, subdir, onconnect) {
                 res.write("error 404: '" + uri + "' not found\n");
                 res.end();
 	    });
-            var proxy_request = proxy.request(req.method, '/podcasts/radio/newspod/rss.xml', req.headers);
+            var proxy_request = proxy.request(req.method, '/podcasts/radio4/today/rss.xml', req.headers);
 	    proxy_request.addListener('response', function (proxy_response) {
 	        proxy_response.addListener('data', function(chunk) {
 	            res.write(chunk, 'binary');
@@ -885,28 +885,27 @@ exports.Server = function(port, subdir, onconnect) {
 	    });
 	} else if (uri.match(/filmdates/)) {
 	    console.log("films requested");
-	    var proxy = http.createClient(80, 'www.filmdates.co.uk');
-	    proxy.on('error', function(e) {
-		console.log('error with proxy: '+e.message);
-                res.writeHead(404, {"content-type": "text/plain"});
-                res.write("error 404: '" + uri + "' not found\n");
-                res.end();
-	    });
-            var proxy_request = proxy.request(req.method, '/rss/out_this_week.php', req.headers);
-	    proxy_request.addListener('response', function (proxy_response) {
-	        proxy_response.addListener('data', function(chunk) {
-	            res.write(chunk, 'binary');
-	        });
-	        proxy_response.addListener('end', function() {
-	            res.end();
-	        });
-	        res.writeHead(proxy_response.statusCode, proxy_response.headers);
+	    var options = {
+		hostname: 'www.filmdates.co.uk',
+		port: 80,
+		path: '/rss/out_this_week/',
+                method: req.method,
+	        headers: { 'User-Agent': 'Mozilla', 'Accept': 'text/html,application/xml' }
+	    }
+	    var proxy = http.request(options, function(proxy_resp) {
+		proxy_resp.on('data', function(chunk) {
+		    res.write(chunk, 'binary');
+		});
+		proxy_resp.on('end', function() {
+		    res.end();
+		});
+		res.writeHead(proxy_resp.statusCode, proxy_resp.headers);
 	    });
 	    req.addListener('data', function(chunk) {
-	        proxy_request.write(chunk, 'binary');
+	        proxy.write(chunk, 'binary');
 	    });
 	    req.addListener('end', function() {
-	        proxy_request.end();
+	        proxy.end();
 	    });
 	} else {
 	    // not expecting to get here, so 404 it
