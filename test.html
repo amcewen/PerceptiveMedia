@@ -73,8 +73,8 @@
 				analogRead(bone.P9_37, arUpdateSlider_37);
 				}, 100);
 		function scan() {
+			$("#btresults").html("Scanning...");
 			bluetoothscan(function(scan_results) { 
-				amc = scan_results; 
 				console.log(scan_results); 
 				var devices = scan_results.value;
 				var output = devices.length+" devices found:<br><br>";
