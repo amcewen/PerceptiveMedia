@@ -140,6 +140,7 @@ var initClient = function() {
     try {
         var socket = io.connect('');
         var myfuncs = {
+            'bluetoothscan': [],
             'digitalWrite': [ 'pin', 'value' ],
             'digitalRead': [ 'pin' ],
             'analogRead': [ 'pin' ],

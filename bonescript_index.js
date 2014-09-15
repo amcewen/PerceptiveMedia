@@ -307,7 +307,7 @@ smoothedRead = exports.smoothedRead = function(pin, callback) {
     //console.log("done reading: "+(Date.now().valueOf()-start));
     //console.log("Max: "+maxVal);
     ret = ret/micSize;
-    console.log("smoothedRead: "+ret);
+    //console.log("smoothedRead: "+ret);
     if(callback) {
         //console.log("smoothedRead has a callback");
 	callback({'value': ret});
@@ -315,6 +315,34 @@ smoothedRead = exports.smoothedRead = function(pin, callback) {
     }
     return(ret);
 }; 
+
+bluetoothscan = exports.bluetoothscan = function(callback) {
+    console.log("bluetoothscan called");
+    var results = [];
+    var child = child_process.exec("hcitool inq", function(err, stdout, stderr) {
+        var devices = stdout.split("\n");
+	for (var i = 0; i < devices.length; i++) {
+	    // The output we're interested in will be of the form
+	    // <bt addr>    clock offset: <offset>    class: <class>
+	    var components = devices[i].match(/\W+([0-9A-Fa-f:]+)\W+clock offset: (0x[0-9A-Fa-f]+)\W+class: (0x[0-9A-Fa-f]+)/);
+	    if (components) {
+	        // Found an interesting line of output
+		var dev = {
+		    btaddr: components[1],
+		    clock_offset: components[2],
+		    class: components[3]
+		};
+		results.push(dev);
+	    }
+	}
+	//console.log(results);
+        if(callback) {
+	    callback({'value': results});
+	    return(true);
+	}
+    });
+    return results;
+};
 
 shiftOut = exports.shiftOut = function(dataPin, clockPin, bitOrder, val, callback) {
   var i;
@@ -762,6 +790,7 @@ if(socketio.exists) {
             };
 
             var myfuncs = {
+                'bluetoothscan': { func: bluetoothscan, args: [] },
                 'digitalWrite': { func: digitalWrite, args: [ 'pin', 'value' ] },
                 'digitalRead': { func: digitalRead, args: [ 'pin' ] },
                 'analogRead': { func: analogRead, args: [ 'pin' ] },

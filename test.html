@@ -72,6 +72,22 @@
 		var interval37 = setInterval(function() {
 				analogRead(bone.P9_37, arUpdateSlider_37);
 				}, 100);
+		function scan() {
+			bluetoothscan(function(scan_results) { 
+				amc = scan_results; 
+				console.log(scan_results); 
+				var devices = scan_results.value;
+				var output = devices.length+" devices found:<br><br>";
+				for (var i =0; i < devices.length; i++) {
+				    output += i+" - ";
+				    output += "address: "+devices[i].btaddr;
+				    output += ", class: "+devices[i].class;
+				    output += ", clock offset: "+devices[i].clock_offset;
+				    output += "<br/>";
+				}
+				$("#btresults").html(output);
+			});
+		}
 	</script>
 </head>
 <body>
@@ -106,5 +122,11 @@
 			<td><span id="P9_37">here</span></td>
 		</tr>
 	</table>
+
+	<h1>Testing Bluetooth Scan</h1>
+	<button id="btscan" onclick="scan()">Click to scan for Bluetooth devices</button>
+	<p>Scan results:</p>
+	<div id="btresults">
+	</div>
 </body>
 </html>
